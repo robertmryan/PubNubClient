@@ -10,7 +10,6 @@
 //
 
 import Foundation
-import PubNub
 
 class ChatController {
     private var messages: [Message] = []
@@ -41,23 +40,16 @@ class ChatController {
 extension ChatController {
     func send(_ text: String) {
         let message = Message(userId: userId, text: text)
-        let event = Event(type: .message, data: message)
-        debugPrintJSON(for: event)
-        eventManager.publish(event)
+        eventManager.send(message)
     }
 
     func update(row: Int, with text: String) {
         messages[row].text = text
-        messages[row].type = .update
-        let event = Event(type: .message, data: messages[row])
-        eventManager.publish(event)
+        eventManager.update(messages[row])
     }
 
     func delete(row: Int) {
-        messages[row].type = .delete
-
-        let event = Event(type: .message, data: messages[row])
-        eventManager.publish(event)
+        eventManager.delete(messages[row])
     }
 
     var messageCount: Int { messages.count }
@@ -75,17 +67,13 @@ extension ChatController {
 
 private extension ChatController {
 
-    func debugPrintJSON<T: Encodable>(for object: T) {
-        let encoder = JSONEncoder()
-        encoder.dateEncodingStrategy = .formatted(DateFormatter.iso8601)
-        encoder.outputFormatting = .prettyPrinted
-        let data = try! encoder.encode(object)
-        print(String(data: data, encoding: .utf8)!)
-    }
-
     func addEventManagerObservers() {
         eventManager.onReceiveMessage = { [weak self] message in
             self?.process(message)
+        }
+
+        eventManager.onReceiveReceipt = { [weak self] receipt in
+            self?.process(receipt)
         }
 
         eventManager.onTypingOn = { [weak self] userId in
@@ -110,26 +98,30 @@ private extension ChatController {
         }
     }
 
-    func process(_ message: Message) {
-        switch message.type {
+    func process(_ messagePayload: MessagePayload) {
+        switch messagePayload.type {
         case .new:
             let row = messages.count
-            messages.append(message)
+            messages.append(messagePayload.message)
             onNewMessage?(row)
 
         case .update:
-            guard let row = messageId(for: message) else { return }
-            messages[row].text = message.text
+            guard let row = messageId(for: messagePayload) else { return }
+            messages[row].text = messagePayload.text
             onUpdateMessage?(row)
 
         case .delete:
-            guard let row = messageId(for: message) else { return }
+            guard let row = messageId(for: messagePayload) else { return }
             messages.remove(at: row)
             onDeleteMessage?(row)
         }
     }
 
-    func messageId(for messagePayload: Message) -> Int? {
+    func process(_ receipt: MessageReceipt) {
+        print(receipt)
+    }
+
+    func messageId(for messagePayload: MessagePayload) -> Int? {
         messages.firstIndex { $0.messageId == messagePayload.messageId }
     }
 

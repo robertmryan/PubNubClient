@@ -194,8 +194,6 @@ extension ViewController: UITextFieldDelegate {
         let oldText = textField.text ?? ""
         guard let range = Range(range, in: oldText) else { return true }
 
-        print("typing")
-        
         let result = (textField.text ?? "").replacingCharacters(in: range, with: string)
         chatController.isTyping = !result.isEmpty
 

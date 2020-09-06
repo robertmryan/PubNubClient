@@ -15,32 +15,38 @@ enum MessageActionType: String, Codable {
 }
 
 enum MessageActionValue: String, Codable {
-    case read = "message_read"
-    case delivered = "message_delivered"
+    case read = "messageRead"
+    case delivered = "messageDelivered"
 }
 
-struct MessageReceipt {
-    let type: MessageActionType = .receipt
-    let value: MessageActionValue = .read
-    let userId: Int
-    let messageIdStart: String?
-    let messageIdEnd: String
+struct MessageReceipt: Codable {
+    let value: MessageActionValue
+    let userId: UserId
+    let messageIdStart: Int?
+    let messageIdEnd: Int
 
     enum CodingKeys: String, CodingKey {
-        case type, value
+        case value
         case userId = "user_id"
         case messageIdStart = "message_id_start"
         case messageIdEnd = "message_id_end"
+    }
+
+    init(type: MessageActionType = .receipt, value: MessageActionValue = .read, userId: UserId, messageIdStart: Int? = nil, messageIdEnd: Int) {
+        self.value = value
+        self.userId = userId
+        self.messageIdStart = messageIdStart
+        self.messageIdEnd = messageIdEnd
     }
 }
 
 extension MessageReceipt: JSONCodable {
     var codableValue: AnyJSON {
         [
+            CodingKeys.value.stringValue: value,
             CodingKeys.userId.stringValue: userId,
             CodingKeys.messageIdStart.stringValue: messageIdStart,
             CodingKeys.messageIdEnd.stringValue: messageIdEnd,
-            CodingKeys.type.stringValue: type
         ]
     }
 }

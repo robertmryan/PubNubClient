@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		831322FB24FAE1D10006EECA /* PubNubCredentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = 831322FA24FAE1D10006EECA /* PubNubCredentials.swift */; };
-		8314CBB824F9672D0006E65E /* MessageAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8314CBB724F9672D0006E65E /* MessageAction.swift */; };
+		8314CBB824F9672D0006E65E /* MessageReceipt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8314CBB724F9672D0006E65E /* MessageReceipt.swift */; };
 		8314CBBA24F96E8F0006E65E /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8314CBB924F96E8F0006E65E /* Event.swift */; };
 		831685CC24F7215900E5F69F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 831685CB24F7215900E5F69F /* AppDelegate.swift */; };
 		831685CE24F7215900E5F69F /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 831685CD24F7215900E5F69F /* SceneDelegate.swift */; };
@@ -17,7 +17,9 @@
 		831685D524F7215B00E5F69F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 831685D424F7215B00E5F69F /* Assets.xcassets */; };
 		831685D824F7215B00E5F69F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 831685D624F7215B00E5F69F /* LaunchScreen.storyboard */; };
 		8319179D24FAF452008389C8 /* PubNubEventManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8319179C24FAF452008389C8 /* PubNubEventManager.swift */; };
-		8355F2BF24F87907006B4BBF /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8355F2BE24F87907006B4BBF /* Message.swift */; };
+		8330AC6824FC494B006ACC2F /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8330AC6724FC494B006ACC2F /* Message.swift */; };
+		8330AC6A24FC4988006ACC2F /* UserId.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8330AC6924FC4988006ACC2F /* UserId.swift */; };
+		8355F2BF24F87907006B4BBF /* MessagePayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8355F2BE24F87907006B4BBF /* MessagePayload.swift */; };
 		8355F2C224F87955006B4BBF /* Signal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8355F2C124F87955006B4BBF /* Signal.swift */; };
 		8355F2C424F87986006B4BBF /* ChatController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8355F2C324F87986006B4BBF /* ChatController.swift */; };
 		8355F2C924F88A53006B4BBF /* BubbleLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8355F2C824F88A53006B4BBF /* BubbleLabel.swift */; };
@@ -27,7 +29,7 @@
 
 /* Begin PBXFileReference section */
 		831322FA24FAE1D10006EECA /* PubNubCredentials.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PubNubCredentials.swift; sourceTree = "<group>"; };
-		8314CBB724F9672D0006E65E /* MessageAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageAction.swift; sourceTree = "<group>"; };
+		8314CBB724F9672D0006E65E /* MessageReceipt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageReceipt.swift; sourceTree = "<group>"; };
 		8314CBB924F96E8F0006E65E /* Event.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
 		831685C824F7215900E5F69F /* PubNubClient.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PubNubClient.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		831685CB24F7215900E5F69F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -38,7 +40,11 @@
 		831685D724F7215B00E5F69F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		831685D924F7215B00E5F69F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8319179C24FAF452008389C8 /* PubNubEventManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PubNubEventManager.swift; sourceTree = "<group>"; };
-		8355F2BE24F87907006B4BBF /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
+		8330AC6724FC494B006ACC2F /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
+		8330AC6924FC4988006ACC2F /* UserId.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserId.swift; sourceTree = "<group>"; };
+		833225CB250553030073E5B9 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		833225CC2505530C0073E5B9 /* LICENSE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = LICENSE.md; sourceTree = "<group>"; };
+		8355F2BE24F87907006B4BBF /* MessagePayload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagePayload.swift; sourceTree = "<group>"; };
 		8355F2C124F87955006B4BBF /* Signal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Signal.swift; sourceTree = "<group>"; };
 		8355F2C324F87986006B4BBF /* ChatController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatController.swift; sourceTree = "<group>"; };
 		8355F2C824F88A53006B4BBF /* BubbleLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BubbleLabel.swift; sourceTree = "<group>"; };
@@ -80,6 +86,8 @@
 		831685BF24F7215900E5F69F = {
 			isa = PBXGroup;
 			children = (
+				833225CB250553030073E5B9 /* README.md */,
+				833225CC2505530C0073E5B9 /* LICENSE.md */,
 				831685CA24F7215900E5F69F /* PubNubClient */,
 				831685C924F7215900E5F69F /* Products */,
 				0F9A4D559CF4FF8AEFF7786B /* Pods */,
@@ -122,9 +130,11 @@
 			isa = PBXGroup;
 			children = (
 				8314CBB924F96E8F0006E65E /* Event.swift */,
-				8355F2BE24F87907006B4BBF /* Message.swift */,
-				8314CBB724F9672D0006E65E /* MessageAction.swift */,
+				8330AC6724FC494B006ACC2F /* Message.swift */,
+				8355F2BE24F87907006B4BBF /* MessagePayload.swift */,
+				8314CBB724F9672D0006E65E /* MessageReceipt.swift */,
 				8355F2C124F87955006B4BBF /* Signal.swift */,
+				8330AC6924FC4988006ACC2F /* UserId.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -284,12 +294,14 @@
 				8355F2C924F88A53006B4BBF /* BubbleLabel.swift in Sources */,
 				831685D024F7215900E5F69F /* ViewController.swift in Sources */,
 				831322FB24FAE1D10006EECA /* PubNubCredentials.swift in Sources */,
-				8355F2BF24F87907006B4BBF /* Message.swift in Sources */,
+				8355F2BF24F87907006B4BBF /* MessagePayload.swift in Sources */,
 				8355F2C424F87986006B4BBF /* ChatController.swift in Sources */,
 				8314CBBA24F96E8F0006E65E /* Event.swift in Sources */,
 				8355F2C224F87955006B4BBF /* Signal.swift in Sources */,
-				8314CBB824F9672D0006E65E /* MessageAction.swift in Sources */,
+				8330AC6A24FC4988006ACC2F /* UserId.swift in Sources */,
+				8314CBB824F9672D0006E65E /* MessageReceipt.swift in Sources */,
 				83BE85D724F8166700423107 /* MessageCell.swift in Sources */,
+				8330AC6824FC494B006ACC2F /* Message.swift in Sources */,
 				8319179D24FAF452008389C8 /* PubNubEventManager.swift in Sources */,
 				831685CC24F7215900E5F69F /* AppDelegate.swift in Sources */,
 				831685CE24F7215900E5F69F /* SceneDelegate.swift in Sources */,

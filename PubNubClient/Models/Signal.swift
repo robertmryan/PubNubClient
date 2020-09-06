@@ -15,14 +15,14 @@ enum SignalType: Int, Codable {
 }
 
 struct Signal: Codable {
-    var userId: Int
-    var type: SignalType
+    let id: Int
+    let type: SignalType
 }
 
 extension Signal: JSONCodable {
     var codableValue: AnyJSON {
         [
-            CodingKeys.userId.stringValue: userId,
+            CodingKeys.id.stringValue: id,
             CodingKeys.type.stringValue: type.rawValue
         ]
     }

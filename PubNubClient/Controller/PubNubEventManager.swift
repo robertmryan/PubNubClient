@@ -18,14 +18,15 @@ import PubNub
 class PubNubEventManager {
     // MARK: - Event handler closures
 
-    var onReceiveMessage: ((Message) -> Void)?
+    var onReceiveMessage: ((MessagePayload) -> Void)?
+    var onReceiveReceipt: ((MessageReceipt) -> Void)?
     var onReceiveSignal: ((Signal) -> Void)?
     var onTypingOn: ((Int) -> Void)?
     var onTypingOff: ((Int) -> Void)?
 
     // MARK: - Private properties
 
-    private let userId: Int
+    private let userId: UserId
     private let channel: String
 
     private let listener = SubscriptionListener()
@@ -42,7 +43,7 @@ class PubNubEventManager {
 
     // MARK: - Object lifecycle
 
-    init(userId: Int, channel: String) {
+    init(userId: UserId, channel: String) {
         self.userId = userId
         self.channel = channel
 
@@ -57,7 +58,26 @@ extension PubNubEventManager {
     ///
     /// - Parameter event: The `Message` wrapped in an `Event`.
 
-    func publish(_ event: Event<Message>) {
+    func send(_ message: Message) {
+        let message = MessagePayload(userId: message.userId, text: message.text)
+        publish(message)
+    }
+
+    func update(_ message: Message) {
+        let message = MessagePayload(type: .update, messageId: message.messageId, userId: message.userId, text: message.text)
+        publish(message)
+    }
+
+    func delete(_ message: Message) {
+        let message = MessagePayload(type: .delete, messageId: message.messageId, userId: message.userId, text: message.text)
+        publish(message)
+    }
+
+    func publishReadReceipt(for messageId: Int) {
+        let receipt = MessageReceipt(userId: userId, messageIdEnd: messageId)
+        let event = Event(type: .receipt, data: receipt)
+//        debugPrintJSON(for: event)
+
         pubnub.publish(channel: channel, message: event) { result in
             switch result {
             case let .success(response):
@@ -72,14 +92,14 @@ extension PubNubEventManager {
     /// Send signal to PubNub indicating that the user is typing.
 
     func signalStartTyping() {
-        let typingOn = Signal(userId: userId, type: .typingOn)
+        let typingOn = Signal(id: userId, type: .typingOn)
         signal(typingOn)
     }
 
     /// Send signal to PubNub indicating that the user is no longer typing.
 
     func signalStopTyping() {
-        let typingOff = Signal(userId: userId, type: .typingOff)
+        let typingOff = Signal(id: userId, type: .typingOff)
         signal(typingOff)
     }
 }
@@ -87,6 +107,30 @@ extension PubNubEventManager {
 // MARK: - Private implementation
 
 private extension PubNubEventManager {
+
+    func publish(_ message: MessagePayload) {
+        let event = Event(type: .message, data: message)
+//        debugPrintJSON(for: event)
+
+        pubnub.publish(channel: channel, message: event) { result in
+            switch result {
+            case let .success(response):
+                print("Successful Publish Response: \(response)")
+
+            case let .failure(error):
+                print("Failed Publish Response: \(error.localizedDescription)")
+            }
+        }
+    }
+
+    func debugPrintJSON<T: Encodable>(for object: T) {
+        let encoder = JSONEncoder()
+        encoder.dateEncodingStrategy = .formatted(DateFormatter.iso8601)
+        encoder.outputFormatting = .prettyPrinted
+        let data = try! encoder.encode(object)
+        print(String(data: data, encoding: .utf8)!)
+    }
+
     func configurePubNub() {
         // Add listener event callbacks
         listener.didReceiveSubscription = { [weak self] event in
@@ -152,15 +196,18 @@ private extension PubNubEventManager {
 
         switch type {
         case .message:
-            guard let message = try? event.payload.decode(Event<Message>.self) else { return }
+            guard let message = try? event.payload.decode(Event<MessagePayload>.self) else { return }
             let payload = message.data
             onReceiveMessage?(payload)
+            publishReadReceipt(for: payload.messageId)
 
         case .action:
             print("action")
 
         case .receipt:
-            print("receipt")
+            guard let receipt = try? event.payload.decode(Event<MessageReceipt>.self) else { return }
+            let payload = receipt.data
+            onReceiveReceipt?(payload)
         }
 
         print(event)
@@ -181,14 +228,14 @@ private extension PubNubEventManager {
             return
         }
 
-        guard signal.userId != userId else { return }
+        guard signal.id != userId else { return }
         
         switch signal.type {
         case .typingOff:
-            onTypingOff?(signal.userId)
+            onTypingOff?(signal.id)
 
         case .typingOn:
-            onTypingOn?(signal.userId)
+            onTypingOn?(signal.id)
         }
 
         print(event)

@@ -18,10 +18,6 @@ enum EventType: String, Codable {
 struct Event<T: Codable>: Codable {
     let type: EventType
     let data: T
-
-    enum CodingKeys: String, CodingKey {
-        case type, data
-    }
 }
 
 extension Event: JSONCodable where T: JSONCodable {
