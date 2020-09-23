@@ -17,6 +17,7 @@
 		831685D524F7215B00E5F69F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 831685D424F7215B00E5F69F /* Assets.xcassets */; };
 		831685D824F7215B00E5F69F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 831685D624F7215B00E5F69F /* LaunchScreen.storyboard */; };
 		8319179D24FAF452008389C8 /* PubNubEventManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8319179C24FAF452008389C8 /* PubNubEventManager.swift */; };
+		832FE1362506845400521EF0 /* Typer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 832FE1352506845400521EF0 /* Typer.swift */; };
 		8330AC6824FC494B006ACC2F /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8330AC6724FC494B006ACC2F /* Message.swift */; };
 		8330AC6A24FC4988006ACC2F /* UserId.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8330AC6924FC4988006ACC2F /* UserId.swift */; };
 		8355F2BF24F87907006B4BBF /* MessagePayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8355F2BE24F87907006B4BBF /* MessagePayload.swift */; };
@@ -40,6 +41,7 @@
 		831685D724F7215B00E5F69F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		831685D924F7215B00E5F69F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8319179C24FAF452008389C8 /* PubNubEventManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PubNubEventManager.swift; sourceTree = "<group>"; };
+		832FE1352506845400521EF0 /* Typer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Typer.swift; sourceTree = "<group>"; };
 		8330AC6724FC494B006ACC2F /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		8330AC6924FC4988006ACC2F /* UserId.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserId.swift; sourceTree = "<group>"; };
 		833225CB250553030073E5B9 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -134,6 +136,7 @@
 				8355F2BE24F87907006B4BBF /* MessagePayload.swift */,
 				8314CBB724F9672D0006E65E /* MessageReceipt.swift */,
 				8355F2C124F87955006B4BBF /* Signal.swift */,
+				832FE1352506845400521EF0 /* Typer.swift */,
 				8330AC6924FC4988006ACC2F /* UserId.swift */,
 			);
 			path = Models;
@@ -303,6 +306,7 @@
 				83BE85D724F8166700423107 /* MessageCell.swift in Sources */,
 				8330AC6824FC494B006ACC2F /* Message.swift in Sources */,
 				8319179D24FAF452008389C8 /* PubNubEventManager.swift in Sources */,
+				832FE1362506845400521EF0 /* Typer.swift in Sources */,
 				831685CC24F7215900E5F69F /* AppDelegate.swift in Sources */,
 				831685CE24F7215900E5F69F /* SceneDelegate.swift in Sources */,
 			);
@@ -452,13 +456,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = UZAPXQTVQ4;
+				DEVELOPMENT_TEAM = X2F6GWQZ5M;
 				INFOPLIST_FILE = PubNubClient/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.robertmryan.PubNubClient;
+				PRODUCT_BUNDLE_IDENTIFIER = com.imidastouch.ios.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -471,13 +475,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = UZAPXQTVQ4;
+				DEVELOPMENT_TEAM = X2F6GWQZ5M;
 				INFOPLIST_FILE = PubNubClient/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.robertmryan.PubNubClient;
+				PRODUCT_BUNDLE_IDENTIFIER = com.imidastouch.ios.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

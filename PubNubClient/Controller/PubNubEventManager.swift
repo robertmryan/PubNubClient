@@ -31,7 +31,7 @@ class PubNubEventManager {
 
     private let listener = SubscriptionListener()
 
-    private let pubnub: PubNub = {
+    static let pubnub: PubNub = {
         var configuration = PubNubConfiguration(
             publishKey: PubNubCredentials.publishKey,    // note these keys are not included in this repo, so use your own keys here
             subscribeKey: PubNubCredentials.subscribeKey
@@ -40,6 +40,8 @@ class PubNubEventManager {
         configuration.uuid = UUID().uuidString
         return PubNub(configuration: configuration)
     }()
+
+    lazy var pubnub = Self.pubnub
 
     // MARK: - Object lifecycle
 
@@ -182,11 +184,11 @@ private extension PubNubEventManager {
 
     /// Handle inbound message
     ///
-    /// - Parameter event: The inbound `MessageEvent`
+    /// - Parameter event: The inbound `PubNubMessage`.
 
-    func handle(messageEvent event: MessageEvent) {
+    func handle(messageEvent event: PubNubMessage) {
         guard
-            let payload = event.payload.dictionaryOptional,
+            let payload = event.payload.codableValue.dictionaryOptional,
             let string = payload["type"] as? String,
             let type = EventType(rawValue: string)
         else {
@@ -196,7 +198,7 @@ private extension PubNubEventManager {
 
         switch type {
         case .message:
-            guard let message = try? event.payload.decode(Event<MessagePayload>.self) else { return }
+            guard let message = try? event.payload.codableValue.decode(Event<MessagePayload>.self) else { return }
             let payload = message.data
             onReceiveMessage?(payload)
             publishReadReceipt(for: payload.messageId)
@@ -205,7 +207,7 @@ private extension PubNubEventManager {
             print("action")
 
         case .receipt:
-            guard let receipt = try? event.payload.decode(Event<MessageReceipt>.self) else { return }
+            guard let receipt = try? event.payload.codableValue.decode(Event<MessageReceipt>.self) else { return }
             let payload = receipt.data
             onReceiveReceipt?(payload)
         }
@@ -219,10 +221,10 @@ private extension PubNubEventManager {
     ///
     /// - Parameter event: The inbound `MessageEvent`.
 
-    func handle(signalEvent event: MessageEvent) {
+    func handle(signalEvent event: PubNubMessage) {
         let signal: Signal
         do {
-            signal = try event.payload.decode(Signal.self)
+            signal = try event.payload.codableValue.decode(Signal.self)
         } catch {
             print(error)
             return
