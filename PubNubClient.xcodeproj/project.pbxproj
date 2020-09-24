@@ -50,6 +50,7 @@
 		8355F2C124F87955006B4BBF /* Signal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Signal.swift; sourceTree = "<group>"; };
 		8355F2C324F87986006B4BBF /* ChatController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatController.swift; sourceTree = "<group>"; };
 		8355F2C824F88A53006B4BBF /* BubbleLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BubbleLabel.swift; sourceTree = "<group>"; };
+		837B5464251BC6330043EC27 /* PubNubClient.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PubNubClient.entitlements; sourceTree = "<group>"; };
 		83BE85D624F8166700423107 /* MessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCell.swift; sourceTree = "<group>"; };
 		C7683B4CD9A9E416E7664713 /* Pods_PubNubClient.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PubNubClient.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D46F94EF92E87A9D54B1F210 /* Pods-PubNubClient.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PubNubClient.debug.xcconfig"; path = "Target Support Files/Pods-PubNubClient/Pods-PubNubClient.debug.xcconfig"; sourceTree = "<group>"; };
@@ -108,6 +109,7 @@
 		831685CA24F7215900E5F69F /* PubNubClient */ = {
 			isa = PBXGroup;
 			children = (
+				837B5464251BC6330043EC27 /* PubNubClient.entitlements */,
 				831322FC24FAE26A0006EECA /* Private */,
 				8355F2C724F881AE006B4BBF /* Support files */,
 				8355F2C624F88189006B4BBF /* App lifecycle */,
@@ -455,6 +457,7 @@
 			baseConfigurationReference = D46F94EF92E87A9D54B1F210 /* Pods-PubNubClient.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = PubNubClient/PubNubClient.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = X2F6GWQZ5M;
 				INFOPLIST_FILE = PubNubClient/Info.plist;
@@ -474,6 +477,7 @@
 			baseConfigurationReference = FDD5232C23DADE070226936E /* Pods-PubNubClient.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = PubNubClient/PubNubClient.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = X2F6GWQZ5M;
 				INFOPLIST_FILE = PubNubClient/Info.plist;

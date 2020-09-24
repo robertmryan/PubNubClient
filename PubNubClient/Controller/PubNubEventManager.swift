@@ -112,9 +112,45 @@ private extension PubNubEventManager {
 
     func publish(_ message: MessagePayload) {
         let event = Event(type: .message, data: message)
-//        debugPrintJSON(for: event)
 
-        pubnub.publish(channel: channel, message: event) { result in
+        let payload = PubNubPushMessage(
+            apns: PubNubAPNSPayload(
+                aps: APSPayload(alert: .object(.init(title: "New message", body: "Hey, do you want to go for dinner?")), sound: .string("default")),
+                pubnub: [.init(targets: [.init(topic: Bundle.main.bundleIdentifier!, environment: .production)])],
+                payload: ""
+            ),
+            fcm: PubNubFCMPayload(
+                payload: "",
+                target: .topic(""),
+                notification: FCMNotificationPayload(title: "New message", body: "Hey, do you want to go for dinner?"),
+                android: FCMAndroidPayload(notification: FCMAndroidNotification(sound: "default"))
+            ),
+            additional: event
+        )
+
+        // I even tried exact code from documentation, and push was not sent (though push from external push testing app did)
+        //
+        // let message = ["text": "John invited you to chat", "room": "chats.room1"]
+        //
+        // let payload = PubNubPushMessage(
+        //     apns: PubNubAPNSPayload(
+        //         aps: APSPayload(alert: .object(.init(title: "Chat invite")), sound: .string("default")),
+        //         pubnub: [.init(targets: [.init(topic: "com.example.chat", environment: .production)])],
+        //         payload: ""
+        //     ),
+        //     fcm: PubNubFCMPayload(
+        //         payload: "",
+        //         target: .topic(""),
+        //         notification: FCMNotificationPayload(title: "Chat invite", body: "John invited you to chat"),
+        //         android: FCMAndroidPayload(notification: FCMAndroidNotification(sound: "default"))
+        //     ),
+        //     additional: message
+        // )
+
+        print("event:", event.jsonStringify ?? "can't stringify")
+        print("apnsevent:", payload.jsonStringify ?? "can't stringify")
+
+        pubnub.publish(channel: channel, message: payload) { result in
             switch result {
             case let .success(response):
                 print("Successful Publish Response: \(response)")
