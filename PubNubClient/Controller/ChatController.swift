@@ -61,6 +61,10 @@ extension ChatController {
     func isMine(for row: Int) -> Bool {
         messages[row].userId == userId
     }
+
+    func info(for deviceToken: Data, completion: @escaping (Result<String, Error>) -> Void) {
+        eventManager.info(for: deviceToken, completion: completion)
+    }
 }
 
 // MARK: - Private Implementation

@@ -104,6 +104,18 @@ extension PubNubEventManager {
         let typingOff = Signal(id: userId, type: .typingOff)
         signal(typingOff)
     }
+
+    func info(for deviceToken: Data, completion: @escaping (Result<String, Error>) -> Void) {
+        pubnub.listPushChannelRegistrations(for: deviceToken) { result in
+            switch result {
+            case let .failure(error):
+                completion(.failure(error))
+
+            case let .success(response):
+                completion(.success(response.joined(separator: ", ")))
+            }
+        }
+    }
 }
 
 // MARK: - Private implementation

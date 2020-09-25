@@ -10,13 +10,16 @@ import UIKit
 
 class ViewController: UIViewController {
 
-    @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var textField: UITextField!
-    @IBOutlet weak var bottomConstraint: NSLayoutConstraint!
-    @IBOutlet weak var typingContainerView: UIStackView!
-    @IBOutlet weak var typingIndicatorView: UIActivityIndicatorView!
+    @IBOutlet private weak var tableView: UITableView!
+    @IBOutlet private weak var textField: UITextField!
+    @IBOutlet private weak var bottomConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var typingContainerView: UIStackView!
+    @IBOutlet private weak var typingIndicatorView: UIActivityIndicatorView!
 
-    let chatController = ChatController()
+    private let chatController = ChatController()
+
+    private var showObserver: NSObjectProtocol?
+    private var hideObserver: NSObjectProtocol?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,9 +36,28 @@ class ViewController: UIViewController {
         chatController.send(text)
     }
 
-    var showObserver: NSObjectProtocol?
-    var hideObserver: NSObjectProtocol?
+    @IBAction func didTapInfo(_ sender: Any) {
+        guard
+            let appDelegate = UIApplication.shared.delegate as? AppDelegate,
+            let deviceToken = appDelegate.deviceToken
+        else {
+            presentMessage(title: "Channels", deviceToken: nil, message: "Couldn't get device token")
+            return
+        }
+
+        chatController.info(for: deviceToken) { [weak self] result in
+            switch result {
+            case .failure(let error):
+                self?.presentMessage(title: "Channels", deviceToken: deviceToken, message: error.localizedDescription)
+
+            case .success(let conversations):
+                self?.presentMessage(title: "Channels", deviceToken: deviceToken, message: conversations)
+            }
+        }
+    }
 }
+
+// MARK: - Private utility methods
 
 private extension ViewController {
 
@@ -109,7 +131,22 @@ private extension ViewController {
             }, completion: nil)
         }
     }
+
+    func presentMessage(title: String? = nil, deviceToken: Data?, message: String) {
+        DispatchQueue.main.async {
+            let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default))
+            if let deviceToken = deviceToken {
+                alert.addTextField { textfield in
+                    textfield.text = deviceToken.hexEncodedString
+                }
+            }
+            self.present(alert, animated: true)
+        }
+    }
 }
+
+// MARK: - UITableViewDataSource
 
 extension ViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -127,6 +164,8 @@ extension ViewController: UITableViewDataSource {
         return cell
     }
 }
+
+// MARK: - UITableViewDelegate
 
 extension ViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -174,6 +213,8 @@ extension ViewController: UITableViewDelegate {
 
 }
 
+// MARK: - MessageCellDelegate
+
 extension ViewController: MessageCellDelegate {
     func cell(_ cell: UITableViewCell, didChangeText text: String) {
         guard let indexPath = tableView.indexPath(for: cell) else { return }
@@ -181,6 +222,8 @@ extension ViewController: MessageCellDelegate {
         chatController.update(row: indexPath.row, with: text)
     }
 }
+
+// MARK: - UITextFieldDelegate
 
 extension ViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {

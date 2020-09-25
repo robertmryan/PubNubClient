@@ -15,7 +15,7 @@ private let log = OSLog(subsystem: Bundle.main.bundleIdentifier!, category: "App
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
-
+    var deviceToken: Data?
     var pubnub = PubNubEventManager.pubnub
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
@@ -49,7 +49,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             case .denied:
                 os_log(.debug, log: log, "getNotificationSettings: We can't use notifications because the user has denied permissions")
 
-            @unknown default:
+            default:
                 os_log(.error, log: log, "getNotificationSettings: Unknown error")
             }
         }
@@ -58,6 +58,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        self.deviceToken = deviceToken
+        
         /*
          STEP 2: Receive device push token from APNs
          */
@@ -91,16 +93,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
              STEP 4: associate push notifications with channels for PubNub
              */
 
-//            pubnub.managePushChannelRegistrations(byRemoving: [], thenAdding: ["conv-1", "alerts.system"], for: deviceToken) { result in
             pubnub.managePushChannelRegistrations(byRemoving: [], thenAdding: ["conv-1"], for: deviceToken) { result in
-
-//            pubnub.modifyAPNSDevicesOnChannels(
-//                byRemoving: [],
-//                thenAdding: ["conv-1", "alerts.system"],
-//                device: deviceToken,
-//                on: "com.imidastouch.ios.dev",
-//                environment: .
-//            ) { result in
                 switch result {
                 case .success(_):
                     os_log(.debug, log: log, "managePushChannelRegistrations success")
@@ -135,14 +128,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
          STEP 5: provide a means to receive push notifications
          */
 
-        os_log(.debug, log: log, "didReceiveRemoteNotification")
-
         guard let aps = userInfo["aps"] as? [String: AnyObject] else {
+            os_log(.error, log: log, "didReceiveRemoteNotification no aps")
             completionHandler(.failed)
             return
         }
 
+        os_log(.debug, log: log, "didReceiveRemoteNotification success: %{public}", String(describing: aps))
         completionHandler(.noData)
+        
         // you might just do nothing if you do not want to display anything
         // there techniques for displaying silent push Notifications
         // but leaving that to Apple docs for those details
