@@ -1,16 +1,16 @@
 PODS:
-  - PubNubSwift (3.0.1)
+  - PubNubSwift (2.5.4)
 
 DEPENDENCIES:
-  - PubNubSwift
+  - PubNubSwift (~> 2)
 
 SPEC REPOS:
   trunk:
     - PubNubSwift
 
 SPEC CHECKSUMS:
-  PubNubSwift: db8d3a556ecd546d7cbf9cb0df2b79dafb67603c
+  PubNubSwift: 4e7648806c4397d6cb5e9e03bcb8199a2f06dc46
 
-PODFILE CHECKSUM: 200df84540de58a8280baecb74e97bb200dd37ad
+PODFILE CHECKSUM: b5e44bd3db6d4d2acf7d3465ef8027df88ea0344
 
 COCOAPODS: 1.9.3

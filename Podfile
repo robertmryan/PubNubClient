@@ -6,5 +6,5 @@ target 'PubNubClient' do
   use_frameworks!
 
   # Pods for PubNubClient
-  pod 'PubNubSwift' #, '~> 2.0.0'
+  pod 'PubNubSwift', '~> 2'
 end

@@ -78,14 +78,9 @@ extension PubNubEventManager {
     func publishReadReceipt(for messageId: Int) {
         let receipt = MessageReceipt(userId: userId, messageIdEnd: messageId)
         let event = Event(type: .receipt, data: receipt)
-//        debugPrintJSON(for: event)
 
         pubnub.publish(channel: channel, message: event) { result in
-            switch result {
-            case let .success(response):
-                print("Successful Publish Response: \(response)")
-
-            case let .failure(error):
+            if case let .failure(error) = result {
                 print("Failed Publish Response: \(error.localizedDescription)")
             }
         }
@@ -106,13 +101,13 @@ extension PubNubEventManager {
     }
 
     func info(for deviceToken: Data, completion: @escaping (Result<String, Error>) -> Void) {
-        pubnub.listPushChannelRegistrations(for: deviceToken) { result in
+        pubnub.listAPNSChannelsOnDevice(for: deviceToken, on: Bundle.main.bundleIdentifier!, environment: .production, respondOn: .main) { result in
             switch result {
             case let .failure(error):
                 completion(.failure(error))
 
             case let .success(response):
-                completion(.success(response.joined(separator: ", ")))
+                completion(.success(response.channels.joined(separator: ", ")))
             }
         }
     }
@@ -125,42 +120,29 @@ private extension PubNubEventManager {
     func publish(_ message: MessagePayload) {
         let event = Event(type: .message, data: message)
 
-        let payload = PubNubPushMessage(
-            apns: PubNubAPNSPayload(
-                aps: APSPayload(alert: .object(.init(title: "New message", body: "Hey, do you want to go for dinner?")), sound: .string("default")),
-                pubnub: [.init(targets: [.init(topic: Bundle.main.bundleIdentifier!, environment: .production)])],
-                payload: ""
-            ),
-            fcm: PubNubFCMPayload(
-                payload: "",
-                target: .topic(""),
-                notification: FCMNotificationPayload(title: "New message", body: "Hey, do you want to go for dinner?"),
-                android: FCMAndroidPayload(notification: FCMAndroidNotification(sound: "default"))
-            ),
-            additional: event
-        )
+        let payload: JSONCodable
+        switch message.type {
+        case .new:
+            payload = PubNubPushMessage(
+                apns: PubNubAPNSPayload(
+                    aps: APSPayload(alert: .object(.init(title: "Message from Rob Ryan", body: message.text)), sound: .string("default")),
+                    pubnub: [.init(targets: [.init(topic: Bundle.main.bundleIdentifier!, environment: .production)])],
+                    payload: ""
+                ),
+                fcm: PubNubFCMPayload(
+                    payload: "",
+                    target: .topic(""),
+                    notification: FCMNotificationPayload(title: "Message from Rob Ryan", body: message.text),
+                    android: FCMAndroidPayload(notification: FCMAndroidNotification(sound: "default"))
+                ),
+                additional: event
+            )
 
-        // I even tried exact code from documentation, and push was not sent (though push from external push testing app did)
-        //
-        // let message = ["text": "John invited you to chat", "room": "chats.room1"]
-        //
-        // let payload = PubNubPushMessage(
-        //     apns: PubNubAPNSPayload(
-        //         aps: APSPayload(alert: .object(.init(title: "Chat invite")), sound: .string("default")),
-        //         pubnub: [.init(targets: [.init(topic: "com.example.chat", environment: .production)])],
-        //         payload: ""
-        //     ),
-        //     fcm: PubNubFCMPayload(
-        //         payload: "",
-        //         target: .topic(""),
-        //         notification: FCMNotificationPayload(title: "Chat invite", body: "John invited you to chat"),
-        //         android: FCMAndroidPayload(notification: FCMAndroidNotification(sound: "default"))
-        //     ),
-        //     additional: message
-        // )
+        default:
+            payload = event
+        }
 
-        print("event:", event.jsonStringify ?? "can't stringify")
-        print("apnsevent:", payload.jsonStringify ?? "can't stringify")
+        debugPrintJSON(for: payload.codableValue)
 
         pubnub.publish(channel: channel, message: payload) { result in
             switch result {
@@ -173,7 +155,7 @@ private extension PubNubEventManager {
         }
     }
 
-    func debugPrintJSON<T: Encodable>(for object: T) {
+    func debugPrintJSON<T: JSONCodable>(for object: T) {
         let encoder = JSONEncoder()
         encoder.dateEncodingStrategy = .formatted(DateFormatter.iso8601)
         encoder.outputFormatting = .prettyPrinted
@@ -188,8 +170,8 @@ private extension PubNubEventManager {
             case let .messageReceived(message):
                 self?.handle(messageEvent: message)
 
-            case let .connectionStatusChanged(status):
-                print("Status Received: \(status)")
+            // case let .connectionStatusChanged(status):
+            //     print("Status Received: \(status)")
 
             case let .presenceChanged(presence):
                 print("Presence Received: \(presence)")
@@ -220,11 +202,7 @@ private extension PubNubEventManager {
 
     func signal(_ event: Signal) {
         pubnub.signal(channel: channel, message: event) { result in
-            switch result {
-            case let .success(response):
-                print("Successful Signal Response: \(response)")
-
-            case let .failure(error):
+            if case let .failure(error) = result {
                 print("Failed Signal Response: \(error.localizedDescription)")
             }
         }
@@ -234,7 +212,7 @@ private extension PubNubEventManager {
     ///
     /// - Parameter event: The inbound `PubNubMessage`.
 
-    func handle(messageEvent event: PubNubMessage) {
+    func handle(messageEvent event: MessageEvent) {
         guard
             let payload = event.payload.codableValue.dictionaryOptional,
             let string = payload["type"] as? String,
@@ -269,7 +247,7 @@ private extension PubNubEventManager {
     ///
     /// - Parameter event: The inbound `MessageEvent`.
 
-    func handle(signalEvent event: PubNubMessage) {
+    func handle(signalEvent event: MessageEvent) {
         let signal: Signal
         do {
             signal = try event.payload.codableValue.decode(Signal.self)
@@ -287,8 +265,5 @@ private extension PubNubEventManager {
         case .typingOn:
             onTypingOn?(signal.id)
         }
-
-        print(event)
     }
-
 }

@@ -93,26 +93,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
              STEP 4: associate push notifications with channels for PubNub
              */
 
-            pubnub.managePushChannelRegistrations(byRemoving: [], thenAdding: ["conv-1"], for: deviceToken) { result in
+            pubnub.modifyAPNSDevicesOnChannels(byRemoving: [], thenAdding: ["conv-1"], device: deviceToken, on: Bundle.main.bundleIdentifier!, environment: .production) { result in
                 switch result {
                 case .success(_):
-                    os_log(.debug, log: log, "managePushChannelRegistrations success")
+                    os_log(.debug, log: log, "modifyAPNSDevicesOnChannels success")
 
                 case let .failure(error):
-                    os_log(.error, log: log, "managePushChannelRegistrations failure: %{public}@", error.localizedDescription)
+                    os_log(.error, log: log, "modifyAPNSDevicesOnChannels failure: %{public}@", error.localizedDescription)
                 }
             }
         } else {
-            pubnub.listPushChannelRegistrations(for: deviceToken) { result in
+            pubnub.listAPNSChannelsOnDevice(for: deviceToken, on: Bundle.main.bundleIdentifier!, environment: .production) { result in
                 switch result {
                 case let .failure(error):
                     os_log(.error, log: log, "listPushChannelRegistrations error: %{public}@", error.localizedDescription)
 
                 case let .success(response):
-                    os_log(.debug, log: log, "listPushChannelRegistrations success:")
-                    for string in response {
-                        os_log(.debug, log: log, "  %{public}@", string)
-                    }
+                    os_log(.debug, log: log, "listPushChannelRegistrations success: %{public}@", response.channels.joined(separator: ", "))
                 }
             }
         }
